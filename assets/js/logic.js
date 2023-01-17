@@ -1,5 +1,4 @@
-// Given I am taking a code quiz:
-// When I click the Start Quiz button
+// Variables
 var startButton = document.getElementById("start-screen");
 var nextButton = document.getElementById("next-btn");
 var questionScreen = document.getElementById("questions");
@@ -7,34 +6,30 @@ var questionElement = document.getElementById("question");
 var answerButtonsElement = document.getElementById("choices");
 var endScreen = document.getElementById("end-screen");
 
-let shuffledQuestions, currentQuestionIndex;
+var shuffledQuestions, currentQuestionIndex;
 
+// Given I am taking a code quiz:
+// When I click the Start Quiz button the time and questions will start
 startButton.addEventListener("click", startQuiz);
 
-nextButton.addEventListener("click", () => {
-  currentQuestionIndex++;
-  setNextQuestion();
-});
-
 function startQuiz() {
-  //hide the startscreen
+  // Hides the startscreen
   startButton.classList.add("hide");
-  //reveal the question screen
+  // Shuffles the questions so they come up in a random order
   shuffledQuestions = questions.sort(() => Math.random() - .5);
   currentQuestionIndex = 0;
+  // Reveals the question screen
   questionScreen.classList.remove("hide");
-  //startTimer and display the first question
+  // Calls the startTimer and set the next question to action
   startTimer();
   setNextQuestion();
-}
-//when the button is clicked, the time and questions will start
+};
 
+// Variables needed for the start timer function
 var timerInterval;
 var secondsLeft = 80;
 
-// The startGame function is called when the start button is clicked
-// A timer starts and I am presented with a question
-
+// Function for the countdown timer displayed in top right hand corner
 function startTimer() {
   timerInterval = setInterval(function () {
     //80 second countdown
@@ -46,98 +41,100 @@ function startTimer() {
       endQuiz();
     }
   }, 1000);
-}
+};
+
+// Listens for the next button to be clicked
+nextButton.addEventListener("click", () => {
+  // When clicked it will increment through to the next question
+  currentQuestionIndex++;
+  // Next question is called
+  setNextQuestion();
+});
 
 function setNextQuestion() {
+  // Reset state is called so that all the possible answer options are reset ready for the next question
   resetState();
+  // Display the questions is called to cycle through the randomly ordered questions
   displayQuestions(shuffledQuestions[currentQuestionIndex]);
-}
-
-// display the questions
-function displayQuestions(questions) {
-  questionElement.innerText = questions.question;
-  questions.answers.forEach(answer => {
-    var button = document.createElement("button");
-    button.innerText = answer.text;
-    button.classList.add("btn");
-    if (answer.correct) {
-      button.dataset.correct = answer.correct;
-    }
-    button.addEventListener("click", selectAnswer);
-    answerButtonsElement.appendChild(button);
-
-    // if (q.correctAnswer == index) {
-    //     var correctAudio = new Audio("./assets/sfx/correct.wav");
-    //     correctAudio.play();
-    //   } else {
-    //     secondsLeft -= 10;
-    //     var incorrectAudio = Audio("./assets/sfx/incorrect.wav");
-    //     incorrectAudio.play();
-  });
-}
+};
 
 function resetState() {
   nextButton.classList.add("hide");
   while (answerButtonsElement.firstChild) {
+    // Removes all the children (the answer options) ready for the next questions set of poosible answers
     answerButtonsElement.removeChild(answerButtonsElement.firstChild);
   }
-}
+};
+
+// Displays the questions
+function displayQuestions(questions) {
+  // The questions array and the question in the array
+  questionElement.innerText = questions.question;
+  // The questions array and the possible answer options within the array
+  questions.answers.forEach(answer => {
+    // A button created within the DOM to be able to select the user answer on a click
+    var button = document.createElement("button");
+    button.innerText = answer.text;
+    button.classList.add("btn");
+    // If the correct answer it sets a correct answer data value to it
+    if (answer.correctAnswer) {
+      button.dataset.correct = answer.correctAnswer;
+    }
+    button.addEventListener("click", selectAnswer);
+    answerButtonsElement.appendChild(button);
+  });
+};
 
 function selectAnswer(e) {
   var selectedButton = e.target;
   var correct = selectedButton.dataset.correct;
-  setStatusClass(document.body, correct);
-  Array.from(answerButtonsElement.children).forEach(button => {
-    setStatusClass(button, button.dataset.correct);
-  });
+  if (correct) {
+    // If the correct answer is selected it plays a sound
+    var correctAudio = new Audio("./assets/sfx/correct.wav");
+    correctAudio.play();
+  } else {
+    // If a wrong answer is selected a different sound plays and 10 seconds is removed from the time
+    secondsLeft -= 10;
+    var incorrectAudio = new Audio("./assets/sfx/incorrect.wav");
+    incorrectAudio.play();
+  }
   if (shuffledQuestions.length > currentQuestionIndex + 1) {
+    // If there are still questions to be answered the next button can be clicked
     nextButton.classList.remove("hide");
   } else {
-    startButton.innerText = "End of quiz";
-    startButton.classList.remove("hide")
+    // If there are no more questions the quiz will end and the timer will stop
+    clearInterval(timerInterval);
+    endQuiz();
   }
-}
+};
 
-function setStatusClass(element, correct) {
-  clearStatusClass(element);
-  if (correct) {
-    element.classList.add("correct");
-  } else {
-    element.classList.add("wrong");
-  }
-}
-
-function clearStatusClass(element) {
-  element.classList.remove("correct");
-  element.classList.remove("wrong");
-}
 // When the game is over
 // Then I can save my initials and score
 
-
 function endQuiz() {
+  // Question screen will be hidden and the end screen will show
   questionScreen.classList.add("hide");
   endScreen.classList.remove("hide");
-
+  // Final score which is equal to the seconds left will be shown
   var finalScore = document.getElementById("final-score");
   finalScore.textContent = secondsLeft;
-
+  // When initials are submitted, they will be saved as a value with the high score
   document.getElementById("submit").addEventListener("click", saveHighScore);
   initialsInput = initialsInput.value;
-}
+};
 
 var submitEl = document.querySelector("#submit");
 var initialsInput = document.querySelector(".initials");
 var highScores = document.querySelector("#scores");
 
 function saveHighScore() {
-  document.getElementById("submit").addEventListener("click", function () {
-    var initials = document.getElementById("initials").value;
-    var finalScore = document.getElementById("final-score").textContent;
-    var highScores = JSON.parse(localStorage.getItem("highScores")) || [];
-    highScores.push({ initials, finalScore })
-  });
+
+  var initials = document.getElementById("initials").value;
+  var finalScore = document.getElementById("final-score").textContent;
+  // High score and initials will be saved in local storage an empty array
+  var highScores = JSON.parse(localStorage.getItem("highScores")) || [];
+  // The initials and high score are pushed to the empty array
+  highScores.push({ initials, finalScore })
   localStorage.setItem("highScores", JSON.stringify(highScores));
   window.location.href = "highscores.html";
-
 };
