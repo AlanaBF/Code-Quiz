@@ -92,11 +92,13 @@ function selectAnswer(e) {
     // If the correct answer is selected it plays a sound
     var correctAudio = new Audio("./assets/sfx/correct.wav");
     correctAudio.play();
+    alert("Well done, correct answer!")
   } else {
     // If a wrong answer is selected a different sound plays and 10 seconds is removed from the time
     secondsLeft -= 10;
     var incorrectAudio = new Audio("./assets/sfx/incorrect.wav");
     incorrectAudio.play();
+    alert("Uh oh, wrong answer. -10 seconds off the clock")
   }
   if (shuffledQuestions.length > currentQuestionIndex + 1) {
     // If there are still questions to be answered the next button can be clicked

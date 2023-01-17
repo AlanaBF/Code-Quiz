@@ -3,10 +3,10 @@ var questions = [
     question: "Inside which HTML element do we put the JavaScript?",
     answers:
       [
-        { text: "<scripting>", correctAnswer: false },
-        { text: "<script>", correctAnswer: true },
-        { text: "<js>", correctAnswer: false },
-        { text: "<javascript>", correctAnswer: false }
+        { text: "1 <scripting>", correctAnswer: false },
+        { text: "2 <js>", correctAnswer: false },
+        { text: "3 <javascript>", correctAnswer: false },
+        { text: "4 <script>", correctAnswer: true }
       ],
   },
 
@@ -14,10 +14,10 @@ var questions = [
     question: "Where is the correct place to insert a JavaScript?",
     answers:
       [
-        { text: "Both the <head> section and the <body> section are correct", correctAnswer: true },
-        { text: "The <head> section", correctAnswer: false },
-        { text: "The <body> section", correctAnswer: false },
-        { text: "Into a <div> section", correctAnswer: false },
+        { text: "1 Both the <head> section and the <body> section are correct", correctAnswer: true },
+        { text: "2 The <head> section", correctAnswer: false },
+        { text: "3 The <body> section", correctAnswer: false },
+        { text: "4 Into a <div> section", correctAnswer: false }
       ],
   },
 
@@ -25,10 +25,10 @@ var questions = [
     question: "How do you write 'Hello World' in an alert box?",
     answers:
       [
-        { text: "alertBox('Hello World');", correctAnswer: false },
-        { text: "alert('HelloWorld');", correctAnswer: true },
-        { text: "msg('Hello World');", correctAnswer: false },
-        { text: "msgBox('Hello World');", correctAnswer: false },
+        { text: "1 alertBox('Hello World');", correctAnswer: false },
+        { text: "2 alert('HelloWorld');", correctAnswer: true },
+        { text: "3 msg('Hello World');", correctAnswer: false },
+        { text: "4 msgBox('Hello World');", correctAnswer: false }
       ],
   },
 
@@ -36,10 +36,10 @@ var questions = [
     question: "How do you create a function in JavaScript?",
     answers:
       [
-        { text: "function = myFunction()", correctAnswer: false },
-        { text: "function myFunction()", correctAnswer: true },
-        { text: "function:myFunction()", correctAnswer: false },
-        { text: "Function = myFunction()", correctAnswer: false },
+        { text: "1 function = myFunction()", correctAnswer: false },
+        { text: "2 function:myFunction()", correctAnswer: false },
+        { text: "3 function myFunction()", correctAnswer: true },
+        { text: "4 Function = myFunction()", correctAnswer: false }
       ],
   },
 
@@ -47,10 +47,10 @@ var questions = [
     question: "How do you call a function?",
     answers:
       [
-        { text: "call myFunction()", correctAnswer: false },
-        { text: "myFunction()", correctAnswer: true },
-        { text: "call function myFunction()", correctAnswer: false },
-        { text: "call Function myFunction()", correctAnswer: false },
+        { text: "1 call myFunction()", correctAnswer: false },
+        { text: "2 myFunction()", correctAnswer: true },
+        { text: "3 call function myFunction()", correctAnswer: false },
+        { text: "4 call Function myFunction()", correctAnswer: false }
       ]
   }
 ];
