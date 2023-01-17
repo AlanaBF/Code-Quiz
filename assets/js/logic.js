@@ -1,20 +1,33 @@
 // Given I am taking a code quiz:
 // When I click the Start Quiz button
+var startButton = document.getElementById("start-screen");
+var nextButton = document.getElementById("next-btn");
+var questionScreen = document.getElementById("questions");
+var questionElement = document.getElementById("question");
+var answerButtonsElement = document.getElementById("choices");
+var endScreen = document.getElementById("end-screen");
 
-function startQuiz(event) {
-  event.preventDefault();
+let shuffledQuestions, currentQuestionIndex;
+
+startButton.addEventListener("click", startQuiz);
+
+nextButton.addEventListener("click", () => {
+  currentQuestionIndex++;
+  setNextQuestion();
+});
+
+function startQuiz() {
   //hide the startscreen
-  var startScreen = document.getElementById(".start-screen");
-  startScreen.classList.add("hide");
+  startButton.classList.add("hide");
   //reveal the question screen
-  var questionsScreen = document.getElementById(".questions");
-  questionsScreen.classList.remove("hide");
+  shuffledQuestions = questions.sort(() => Math.random() - .5);
+  currentQuestionIndex = 0;
+  questionScreen.classList.remove("hide");
   //startTimer and display the first question
   startTimer();
-  displayQuestions();
+  setNextQuestion();
 }
 //when the button is clicked, the time and questions will start
-document.getElementById("start").addEventListener("click", startQuiz);
 
 var timerInterval;
 var secondsLeft = 80;
@@ -26,7 +39,7 @@ function startTimer() {
   timerInterval = setInterval(function () {
     //80 second countdown
     secondsLeft--; //  decrementor
-    document.getElementById(".time").textContent = secondsLeft;
+    document.getElementById("time").textContent = secondsLeft;
     if (secondsLeft === 0) {
       // if no seconds left then the quiz will end
       clearInterval(timerInterval);
@@ -35,36 +48,75 @@ function startTimer() {
   }, 1000);
 }
 
+function setNextQuestion() {
+  resetState();
+  displayQuestions(shuffledQuestions[currentQuestionIndex]);
+}
+
 // display the questions
-function displayQuestions(q) {
-  var question = getElementById(".question");
-  question.textContent = q.question;
-  var answers = document.querySelectorAll("#answers");
-  answers.forEach(function (element, index) {
-    element.textContent = q.answers[index]
-    element.addEventListener("click", function () {
-      if (q.correctAnswer == index) {
-        var correctAudio = new Audio("./assets/sfx/correct.wav");
-        correctAudio.play();
-      } else {
-        secondsLeft -= 10;
-        var incorrectAudio = Audio("./assets/sfx/incorrect.wav");
-        incorrectAudio.play();
-      }
-    });
+function displayQuestions(questions) {
+  questionElement.innerText = questions.question;
+  questions.answers.forEach(answer => {
+    var button = document.createElement("button");
+    button.innerText = answer.text;
+    button.classList.add("btn");
+    if (answer.correct) {
+      button.dataset.correct = answer.correct;
+    }
+    button.addEventListener("click", selectAnswer);
+    answerButtonsElement.appendChild(button);
+
+    // if (q.correctAnswer == index) {
+    //     var correctAudio = new Audio("./assets/sfx/correct.wav");
+    //     correctAudio.play();
+    //   } else {
+    //     secondsLeft -= 10;
+    //     var incorrectAudio = Audio("./assets/sfx/incorrect.wav");
+    //     incorrectAudio.play();
   });
 }
 
-displayQuestions(quizArray);
+function resetState() {
+  nextButton.classList.add("hide");
+  while (answerButtonsElement.firstChild) {
+    answerButtonsElement.removeChild(answerButtonsElement.firstChild);
+  }
+}
 
-//When the game is over
-//Then I can save my initials and score
+function selectAnswer(e) {
+  var selectedButton = e.target;
+  var correct = selectedButton.dataset.correct;
+  setStatusClass(document.body, correct);
+  Array.from(answerButtonsElement.children).forEach(button => {
+    setStatusClass(button, button.dataset.correct);
+  });
+  if (shuffledQuestions.length > currentQuestionIndex + 1) {
+    nextButton.classList.remove("hide");
+  } else {
+    startButton.innerText = "End of quiz";
+    startButton.classList.remove("hide")
+  }
+}
+
+function setStatusClass(element, correct) {
+  clearStatusClass(element);
+  if (correct) {
+    element.classList.add("correct");
+  } else {
+    element.classList.add("wrong");
+  }
+}
+
+function clearStatusClass(element) {
+  element.classList.remove("correct");
+  element.classList.remove("wrong");
+}
+// When the game is over
+// Then I can save my initials and score
 
 
 function endQuiz() {
-  let questionsScreen = document.getElementById("questions");
-  questionsScreen.classList.add("hide");
-  var endScreen = document.getElementById("end-screen");
+  questionScreen.classList.add("hide");
   endScreen.classList.remove("hide");
 
   var finalScore = document.getElementById("final-score");
